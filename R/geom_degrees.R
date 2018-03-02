@@ -9,7 +9,7 @@ geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
 
   long_0 <- long_0 %||% 0
 
-  default_aes <- aes_(x=~long, y=~lat, label=~label)
+  default_aes <- ggplot2::aes_(x=~long, y=~lat, label=~label)
   mapping = aes_intersect(mapping, default_aes)
 
   data <- data %||% degrees(proj = proj, long_0 = long_0, lat_min = lat_min,
@@ -18,7 +18,7 @@ geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
     long_by = long_by, long_n = long_n, long_at = long_at, long_nudge = long_nudge,  
     proj_extra=proj_extra)
 
-  geom_text(mapping = mapping, data = data, stat = stat, position = position, ...,
+  ggplot2::geom_text(mapping = mapping, data = data, stat = stat, position = position, ...,
     na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes) 
 }
 #' @export
@@ -36,12 +36,12 @@ degrees <- function(proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
   degrees_lat <- tibble(
     lat = rep(lat_breaks, length(lat_at)),
     long = rep(lat_at, each=length(lat_breaks)),
-    label = lat %>% wrap_dd %>% dd2dms(TRUE) %>% pretty_dms)
+    label = lat %>% wrap_dd %>% sp::dd2dms(TRUE) %>% pretty_dms)
 
   degrees_long <- tibble(
     lat = rep(long_at, each=length(long_breaks)),
     long = rep(long_breaks, length(long_at)),
-    label = long %>% wrap_dd %>% dd2dms() %>% pretty_dms)
+    label = long %>% wrap_dd %>% sp::dd2dms() %>% pretty_dms)
 
   if(!is.null(proj)){
     degrees_lat %<>% project(proj, long_0, proj_extra=proj_extra)
@@ -51,7 +51,7 @@ degrees <- function(proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
   degrees_long <- mutate(degrees_long, lat = ifelse(lat >0, lat + lat_nudge, lat - lat_nudge))
   degrees_lat <- mutate(degrees_lat, long = ifelse(long >0, long + long_nudge, long - long_nudge))
 
-  bind_rows(degrees_lat, degrees_long)
+  dplyr::bind_rows(degrees_lat, degrees_long)
 }
 
 wrap_dd <- function(r, shift=0){ # between -180 and 180
@@ -71,7 +71,7 @@ pretty_dms <- function (x, ...){
   else tag <- c("S", "N")
   res <- ifelse(x@WS, tag[1], tag[2])
   res <- paste(ifelse(round(x@sec, digits = 3) != "0", paste(round(x@sec, 
-                             digits = 3), "\"", sep = ""), ""), res, sep = "")
+                             SpatialPolygons2mapdigits = 3), "\"", sep = ""), ""), res, sep = "")
   res <- paste(ifelse(((x@min != 0) | (round(x@sec, digits = 3) != 
         "0")), paste("°", x@min, "'", sep = ""), ""), res, sep = "")
   res <- paste(x@deg, "°", res, sep = "")

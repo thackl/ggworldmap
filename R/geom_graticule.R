@@ -12,14 +12,14 @@ geom_graticule <- function( mapping = NULL, data = NULL, stat = "identity",
    long_n = NULL, proj_extra=NULL, ..., na.rm = FALSE,
    show.legend = NA, inherit.aes = FALSE){
 
-  default_aes <- aes_(x=~long, y=~lat, group=~group)
+  default_aes <- ggplot2::aes_(x=~long, y=~lat, group=~group)
   mapping = aes_intersect(mapping, default_aes)
 
   data <- data %||% graticules(proj = proj, long_0 = long_0, lat_min = lat_min,
     lat_max = lat_max, lat_by = lat_by, lat_n = lat_n, long_min = long_min,
     long_max = long_max, long_by = long_by, long_n = long_n, proj_extra=proj_extra)
   
-  geom_path(mapping = mapping, data = data, stat = stat, position = position,
+  ggplot2::geom_path(mapping = mapping, data = data, stat = stat, position = position,
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes) 
 }
 #' @export
@@ -39,9 +39,9 @@ graticules <- function(proj = "lat_long", long_0 = 0, lat_min = -90, lat_max = 9
   if(length(lat_breaks > 0)) gl_args$norths <- lat_breaks
   if(length(long_breaks > 0)) gl_args$easts <- long_breaks
 
-  graticules <- do.call(gridlines, gl_args) %>%
+  graticules <- do.call(sp::gridlines, gl_args) %>%
     # to Spatial Lines Data Fram
-    SpatialLinesDataFrame(data=data.frame(1:length(.)), match.ID = FALSE) %>%
+    sp::SpatialLinesDataFrame(data=data.frame(1:length(.)), match.ID = FALSE) %>%
     map_data # to data.frame
 
   # short-circuits on shift=NULL/0 & proj=NULL/longlat

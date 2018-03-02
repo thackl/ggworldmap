@@ -14,7 +14,7 @@ project.default <- rgdal::project
 
 #' @export
 project.data.frame <- function(.data, ...){
-  project(as_tibble(.data), ...)
+  project(tibble::as_tibble(.data), ...)
 }
 
 #' @export
@@ -33,7 +33,7 @@ project.tbl_df <- function(.data, proj = NULL, long_0 = 0, lat=lat,
   
   proj_opts <- paste(paste0("+proj=", proj), paste0("+lon_0=", long_0), proj_extra)
   
-  mutate(.data,
+  dplyr::mutate(.data,
          !! long_proj := rgdal::project(cbind(!! long, !! lat),
          proj = proj_opts)[,1]/10^5 + long_0)
 }

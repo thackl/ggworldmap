@@ -9,13 +9,13 @@ geom_worldmap <- function(mapping = NULL, data = NULL, stat = "identity",
 
   long_0 <- long_0 %||% 0
 
-  default_aes <- aes_(x=~long, y=~lat, group=~group)
+  default_aes <- ggplot2::aes_(x=~long, y=~lat, group=~group)
   mapping = aes_intersect(mapping, default_aes)
 
   data <- data %||% worldmap(map = map, long_0 = long_0, lat_min = lat_min, lat_max = lat_max,
                              proj = proj, proj_extra = proj_extra)
   
-  geom_polygon(mapping = mapping, data = data, stat = stat, position = position, ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes) 
+  ggplot2::geom_polygon(mapping = mapping, data = data, stat = stat, position = position, ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes) 
 }
 #' @export
 worldmap <- function(map = "world", proj = NULL, long_0 = 0, lat_min = NULL,
@@ -23,13 +23,13 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0, lat_min = NULL,
 
   long_0 <- long_0 %||% 0
 
-  WGS84 <- CRS("+proj=longlat +datum=WGS84 +over")
+  WGS84 <- sp::CRS("+proj=longlat +datum=WGS84 +over")
 
   # get map as SpatialPolygons
   if(is.character(map)){
     m_o <- maps::map(map, fill=fill, plot=plot) # get world object
     # get polygons in longlat proj.
-    m_p <- map2SpatialPolygons(m_o, IDs=sapply(strsplit(m_o$names, ":"), "[", 1L), proj4string=WGS84)
+    m_p <- maptools::map2SpatialPolygons(m_o, IDs=sapply(strsplit(m_o$names, ":"), "[", 1L), proj4string=WGS84)
   }else if(is(map, "SpatialPolygons")) {
     m_p <- map
   }else{
@@ -38,21 +38,21 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0, lat_min = NULL,
 
   if(!is.null(long_0) && long_0 != 0){
     # create "split line" to split worldmap
-    split.line = SpatialLines(list(Lines(list(Line(cbind(180+long_0,c(-90,90)))), ID="line")), 
+    split.line = sp::SpatialLines(list(sp::Lines(list(sp::Line(cbind(180+long_0,c(-90,90)))), ID="line")), 
       proj4string=WGS84)
-    m_p <- gBuffer(m_p, byid=TRUE, width=0)
-    line.gInt <- gIntersection(split.line, m_p)
+    m_p <- rgeos::gBuffer(m_p, byid=TRUE, width=0)
+    line.gInt <- rgeos::gIntersection(split.line, m_p)
     # create a very thin polygon (buffer) out of the intersecting "split line
-    bf <- gBuffer(line.gInt, byid=TRUE, width=0.000001)  
+    bf <- rgeos::gBuffer(line.gInt, byid=TRUE, width=0.000001)  
     # split world polys using intersecting thin polygon (buffer)
-    m_p <- gDifference(m_p, bf, byid=TRUE)
+    m_p <- rgeos::gDifference(m_p, bf, byid=TRUE)
   }
 
   # crop lat
   if(!is.null(lat_min) & !is.null(lat_max)){
     lat_box <- as(raster::extent(-180, 180, lat_min, lat_max), "SpatialPolygons")
-    proj4string(lat_box) <- paste0("+proj=longlat +datum=WGS84")
-    m_p <- crop(m_p, lat_box)
+    sp::proj4string(lat_box) <- paste0("+proj=longlat +datum=WGS84")
+    m_p <- raster::crop(m_p, lat_box)
   }
   
   # convert to data.frame
@@ -91,8 +91,8 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0, lat_min = NULL,
       
     }
     
-    m_df <- rbind(mr, mx) # integrate original and new points
-    m_df <- arrange(m_df, order) # reorder
+    m_df <- rbind(mr, mx) %>% # integrate original and new points
+      dplyr::arrange(order) # reorder
   }
 
   # short-circuits on long_0=NULL/0 & proj=NULL/longlat
