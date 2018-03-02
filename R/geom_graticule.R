@@ -6,7 +6,7 @@
 #'
 #' @export
 geom_graticule <- function( mapping = NULL, data = NULL, stat = "identity",
-   position = "identity", proj = "lat_long", long_0 = 0,
+   position = "identity", proj = "longlat", long_0 = 0,
    lat_min = -90, lat_max = 90, lat_by = 20, lat_n = NULL,
    long_min = -180 + long_0, long_max = 180 + long_0, long_by = 30,
    long_n = NULL, proj_extra=NULL, ..., na.rm = FALSE,
@@ -23,7 +23,7 @@ geom_graticule <- function( mapping = NULL, data = NULL, stat = "identity",
     ..., na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes) 
 }
 #' @export
-graticules <- function(proj = "lat_long", long_0 = 0, lat_min = -90, lat_max = 90,
+graticules <- function(proj = "longlat", long_0 = 0, lat_min = -90, lat_max = 90,
     lat_by = 20, lat_n = NULL, long_min = -180 + long_0, long_max = 180 + long_0,
     long_by = 30, long_n = NULL, proj_extra=NULL){
 
