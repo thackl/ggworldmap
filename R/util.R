@@ -6,8 +6,8 @@
   if (is.null(x)) NULL else y
 }
 
-null_then_else <- function(x, y, z){
-  if(is.null(x)) y else z
+if_null_else <- function(cond, true, false){
+  if(is.null(cond)) true else false
 }
 
 compute_breaks <- function(min, max, by, n = NULL){
