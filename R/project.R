@@ -18,8 +18,9 @@ project.data.frame <- function(.data, ...){
 }
 
 #' @export
+#' @param ... other arguments for [rgdal::project]
 project.tbl_df <- function(.data, proj = NULL, long_0 = 0, lat=lat,
-    long=long, long_proj=long, proj_extra=NULL){
+    long=long, long_proj=NULL, proj_extra=NULL, ...){
 
   proj <- proj %||% "longlat"
   long_0 <- long_0 %||% 0
@@ -29,11 +30,11 @@ project.tbl_df <- function(.data, proj = NULL, long_0 = 0, lat=lat,
 
   lat <- rlang::enquo(lat)
   long <- rlang::enquo(long)
-  long_proj <- rlang::quo_text(rlang::enquo(long_proj))
+  long_proj <- long_proj %||% rlang::quo_text(long)
   
   proj_opts <- paste(paste0("+proj=", proj), paste0("+lon_0=", long_0), proj_extra)
   
   dplyr::mutate(.data,
          !! long_proj := rgdal::project(cbind(!! long, !! lat),
-         proj = proj_opts)[,1]/10^5 + long_0)
+         proj = proj_opts, ...)[,1]/10^5 + long_0)
 }
