@@ -5,12 +5,11 @@ library(tidyverse)
 volcanic_eruptions <- read_tsv("https://www.ngdc.noaa.gov/nndc/struts/results?type_0=Exact&query_0=$HAZ_EVENT_ID&t=102557&s=50&d=54&dfn=volerup.txt")
 
 volcanic_eruptions <- volcanic_eruptions %>%
-  rename(lat = Latitude, long = Longitude) %>%
-  filter(Year > 1919)
+  rename(lat = Latitude, long = Longitude) 
 
-# pull out most common types
+# pull out 4 most common types
 common_types <- volcanic_eruptions %>% count(Type) %>%
-  filter(n >10) %>% arrange(-n) %>% pull(Type)
+   arrange(-n) %>% slice(1:4) %>% pull(Type)
 
 # squash other types, factorize to make it easier to arrange them
 volcanic_eruptions <- volcanic_eruptions %>%
@@ -18,6 +17,6 @@ volcanic_eruptions <- volcanic_eruptions %>%
     Type = ifelse(Type %in% common_types, Type, "other"),
     Type = factor(Type, levels = c(common_types, "other")))
 
-devtools::use_data(volcanic_eruptions)
+devtools::use_data(volcanic_eruptions, overwrite=TRUE)
 
  
