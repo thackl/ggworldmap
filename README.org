@@ -19,19 +19,39 @@ volcanic_eruptions_decluttered <- volcanic_eruptions %>%
 
 # set up a plot of the world
 gg <- ggplot(mapping = aes(x=long, y=lat)) +
-  coord_equal(ylim = c(-80, 80)) + theme_void(base_size = 15) +
+  # ----------------------------------------------------------------------------
   # get a world map, centered on the Pacific, in Robinson projection
   geom_worldmap(proj = proj, long_0 = long_0, lat_min = lat_min,
     lat_max = lat_max, color = "grey90", fill = "grey90") +
   # add some grid lines
-  geom_graticule(proj = proj, long_0 = long_0, lat_min = lat_min,
-    lat_max = lat_max, long_by = 40, linetype = 1, color = "grey80", size = .5, alpha=.3) +
+  geom_graticule(proj = proj, long_0 = long_0, lat_min = lat_min, lat_max = lat_max,
+    long_by = 40, linetype = 1, color = "grey80", size = .5, alpha=.3) +
   # and a grid frame
-  geom_graticule(proj = proj, long_0 = long_0, lat_min = lat_min,
-                 lat_max = lat_max, lat_n = 2, long_n = 2, linetype = 1, color = "grey80", size = 1) +
+  geom_graticule(proj = proj, long_0 = long_0, lat_min = lat_min, lat_max = lat_max,
+     lat_n = 2, long_n = 2, linetype = 1, color = "grey80", size = 1) +
   # and some grid labels
-  geom_degree(proj = proj, long_0 = long_0, lat_min = lat_min, lat_max = lat_max, long_by = 40, color = "grey60", size = 3)
-gg
+  geom_degree(proj = proj, long_0 = long_0, lat_min = lat_min, lat_max = lat_max,
+    long_by = 40, color = "grey60", size = 3)
+  # ----------------------------------------------------------------------------
+  # now throw our data on the canvas
+  geom_array(aes(color = Type), volcanic_eruptions_decluttered, nrow = 7, spread = 2,
+    shape = 19, size = .8, vjust = .5) +
+  # original locations with overplotting issues
+  geom_point(data = volcanic_eruptions, size = .3, alpha = .5) +
+  # ----------------------------------------------------------------------------
+  # and finally make things pretty
+  ggtitle("Significant Volcanic Eruptions", "of the last 100 years by most common types") +
+  # with fixed aspect ratio, but no poles,
+  coord_equal(ylim = c(-80, 80)) +
+  # an almost void greyish theme,
+  theme_light(base_size = 15) + theme(
+    panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+    axis.text = element_blank(), axis.ticks = element_blank(), axis.title = element_blank(),
+    legend.justification=c(0,1), legend.position=c(.52,.29), legend.text.align=0) +
+  # and nice colors
+  scale_color_brewer("Eruption types", palette="Dark2") +
+  # wrapped in facets
+  facet_wrap(~Type, ncol=2, strip.position = "left")
 #+END_SRC
 
 [[volcanic-eruptions.png]]
