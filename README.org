@@ -1,0 +1,37 @@
+
+#+BEGIN_SRC R
+library(ggworldmap)
+
+proj <- "robin" # use Robinson projection
+long_0 <- -120  # center on Pacific
+lat_min <- -70  # and clip the poles
+lat_max <- 70
+
+# get some sample data
+data(volcanic_eruptions)
+volcanic_eruptions <- volcanic_eruptions %>%
+  filter(Year > 1919) %>%          # let's look at last 100 years
+  project(proj, long_0)            # and we want our data projected
+volcanic_eruptions_decluttered <- volcanic_eruptions %>%
+  concentrate(lambda = .2) %>%     # round up close points at a single location
+  arrange(Type)                    # and order them nicely for plotting
+
+
+# set up a plot of the world
+gg <- ggplot(mapping = aes(x=long, y=lat)) +
+  coord_equal(ylim = c(-80, 80)) + theme_void(base_size = 15) +
+  # get a world map, centered on the Pacific, in Robinson projection
+  geom_worldmap(proj = proj, long_0 = long_0, lat_min = lat_min,
+    lat_max = lat_max, color = "grey90", fill = "grey90") +
+  # add some grid lines
+  geom_graticule(proj = proj, long_0 = long_0, lat_min = lat_min,
+    lat_max = lat_max, long_by = 40, linetype = 1, color = "grey80", size = .5, alpha=.3) +
+  # and a grid frame
+  geom_graticule(proj = proj, long_0 = long_0, lat_min = lat_min,
+                 lat_max = lat_max, lat_n = 2, long_n = 2, linetype = 1, color = "grey80", size = 1) +
+  # and some grid labels
+  geom_degree(proj = proj, long_0 = long_0, lat_min = lat_min, lat_max = lat_max, long_by = 40, color = "grey60", size = 3)
+gg
+#+END_SRC
+
+[[volcanic-eruptions.png]]
