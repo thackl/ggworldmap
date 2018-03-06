@@ -19,22 +19,27 @@ project.data.frame <- function(.data, ...){
 
 #' @export
 #' @param ... other arguments for [rgdal::project]
-project.tbl_df <- function(.data, proj = NULL, long_0 = 0, lat=lat,
-    long=long, long_proj=NULL, proj_extra=NULL, ...){
+project.tbl_df <- function(.data, proj = NULL, long_0 = 0, proj_extra = NULL,
+    scale_factor = 1e-5, lat = lat, long = long, long_proj = NULL, lat_proj = NULL, ...){
 
-  proj <- proj %||% "longlat"
   long_0 <- long_0 %||% 0
 
-  # short-circuits on long_0=NULL/0 & proj=NULL/longlat
-  if(proj == "longlat" && long_0 == 0) return(.data)
+  if(is.null(proj)){
+    if(long_0 != 0){
+      stop("not implemented")
+    }
+    return(.data) # unprojected
+  }
 
-  lat <- rlang::enquo(lat)
-  long <- rlang::enquo(long)
-  long_proj <- long_proj %||% rlang::quo_text(long)
-  
+  scale_factor <- scale_factor %||% 1
+  lat <- rlang::quo_text(rlang::enquo(lat))
+  long <- rlang::quo_text(rlang::enquo(long))
+  lat_proj <- lat_proj %||% lat
+  long_proj <- long_proj %||% long
+
   proj_opts <- paste(paste0("+proj=", proj), paste0("+lon_0=", long_0), proj_extra)
-  
-  dplyr::mutate(.data,
-         !! long_proj := rgdal::project(cbind(!! long, !! lat),
-         proj = proj_opts, ...)[,1]/10^5 + long_0)
+
+  .data[c(long_proj, lat_proj)] <- rgdal::project(as.matrix(.data[c(long, lat)]), proj = proj_opts, ...)
+  .data[c(long_proj, lat_proj)] <- .data[c(long_proj, lat_proj)] * scale_factor
+  .data
 }
