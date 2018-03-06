@@ -7,9 +7,10 @@ this is magic to fix polygons running outside the shifted world bounds
 https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/}
 \usage{
 geom_worldmap(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", map = "world", proj = NULL, long_0 = 0,
-  lat_min = NULL, lat_max = NULL, proj_extra = "+datum=WGS84", ...,
-  na.rm = FALSE, show.legend = NA, inherit.aes = FALSE)
+  position = "identity", map = "world", long_0 = 0, long_min = -180 +
+  long_0, long_max = 180 + long_0, lat_min = -90, lat_max = 90,
+  proj_extra = "+datum=WGS84", ..., na.rm = FALSE, show.legend = NA,
+  inherit.aes = FALSE)
 }
 \description{
 resplit the map polygons at the new edges for rotate shift
