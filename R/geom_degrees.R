@@ -1,5 +1,5 @@
 #' @export
-geom_degree <- function( mapping = NULL, data = NULL, stat = "identity",
+geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
     lat_by = 20, lat_n = NULL, lat_at = c(long_min, long_max), lat_nudge = 5,
     lat_vjust = "center", lat_hjust = "outward", long_min = -180 + long_0,
