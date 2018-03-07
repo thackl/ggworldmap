@@ -58,11 +58,50 @@ projections, those extreme latitudes are heavily distorted and plotting them
 doesn't make sense anyway.
 }
 \examples{
+# a nice map with graticules and degree labels
 ggworldmap()
 
-ggworldmap(proj = "robin", degree = NULL)
+# is short for
+ggplot() +
+  geom_worldmap(color = "gray90", fill = "gray90") +
+  geom_graticule(color = "gray80") +
+  geom_gratframe(color = "gray80") +
+  geom_degree(color = "gray80") +
+  theme_worldmap_light() +
+  coord_equal()
 
-ggworldmap(proj = "merc", long_0 = -90, lat_min = -75, lat_max = 75,
-  mapping = aes(fill=region), color = "black",
-  graticule = list("light", color = "grey50"))
+# map in azimuthal orthogonal projection with degree labels disabled
+ggworldmap(proj = "ortho", long_0 = 90, long_min = 0, long_max = 180,
+  degree = NULL)
+
+# map in Mercartor projection and with customized degree labels
+ggworldmap(
+  proj = "merc", lat_min = -75, lat_max = 75,
+  graticule = list("light", size=.3, lat_by = 10),
+  degree = list("light", lat_min = -70, lat_max = 70,
+    lat_by = 10, lat_hjust = "inward", lat_vjust = "outward",
+    lat_nudge_x = 30, lat_nudge_y = 2, long_min = -150,
+    long_max = 150, long_hjust = "outward", long_nudge_x = 1,
+    long_nudge_y = 11))
+
+# Pacific centered map in Robinson projection colored by countries
+ggworldmap(
+  proj = "robin", long_0 = -150, lat_min = -75, lat_max = 75,
+  mapping = aes(fill=region), color = "black", show.legend = FALSE,
+  graticule = list("light", color = "grey40"),
+  degree = list("light", color = "grey30",
+    family = "Times New Roman"))
+
+# The Pacific Ring of Fire
+data(volcanic_eruptions)            # load example data
+proj <- "robin"                     # Robinson projection
+long_0 <- -150                      # Center on Pacific
+ve_proj <- volcanic_eruptions \%>\%     
+  project(proj, long_0) \%>\%         # project data
+  arrange(desc(VEI))                # and get nice plotting order 
+# plot projected map and data
+ggworldmap(ve_proj, long_0 = long_0, proj = proj) +
+  geom_point(aes(size = VEI^4, color = VEI), alpha =.5) +
+  scale_color_distiller(palette = "Spectral")
+
 }

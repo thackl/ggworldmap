@@ -8,7 +8,7 @@
 #' polygon map that comes with ggplot2 only covers that range. Also, in most
 #' projections, those extreme latitudes are heavily distorted and plotting them
 #' doesn't make sense anyway.
-#' 
+#'
 #' @inheritParams ggplot2::ggplot
 #' @inheritParams ggworldmap::geom_worldmap
 #' @param style Default style for the map, graticules, degrees and the default
@@ -29,15 +29,54 @@
 #' @export
 #' @return ggplot object
 #' @examples
+#' # a nice map with graticules and degree labels
 #' ggworldmap()
 #'
-#' ggworldmap(proj = "robin", degree = NULL)
+#' # is short for
+#' ggplot() +
+#'   geom_worldmap(color = "gray90", fill = "gray90") +
+#'   geom_graticule(color = "gray80") +
+#'   geom_gratframe(color = "gray80") +
+#'   geom_degree(color = "gray80") +
+#'   theme_worldmap_light() +
+#'   coord_equal()
 #'
-#' ggworldmap(proj = "merc", long_0 = -90, lat_min = -75, lat_max = 75,
-#'   mapping = aes(fill=region), color = "black",
-#'   graticule = list("light", color = "grey50"))
+#' # map in azimuthal orthogonal projection with degree labels disabled
+#' ggworldmap(proj = "ortho", long_0 = 90, long_min = 0, long_max = 180,
+#'   degree = NULL)
+#'
+#' # map in Mercartor projection and with customized degree labels
+#' ggworldmap(
+#'   proj = "merc", lat_min = -75, lat_max = 75,
+#'   graticule = list("light", size=.3, lat_by = 10),
+#'   degree = list("light", lat_min = -70, lat_max = 70,
+#'     lat_by = 10, lat_hjust = "inward", lat_vjust = "outward",
+#'     lat_nudge_x = 30, lat_nudge_y = 2, long_min = -150,
+#'     long_max = 150, long_hjust = "outward", long_nudge_x = 1,
+#'     long_nudge_y = 11))
+#'
+#' # Pacific centered map in Robinson projection colored by countries
+#' ggworldmap(
+#'   proj = "robin", long_0 = -150, lat_min = -75, lat_max = 75,
+#'   mapping = aes(fill=region), color = "black", show.legend = FALSE,
+#'   graticule = list("light", color = "grey40"),
+#'   degree = list("light", color = "grey30",
+#'     family = "Times New Roman"))
+#'
+#' # The Pacific Ring of Fire
+#' data(volcanic_eruptions)            # load example data
+#' proj <- "robin"                     # Robinson projection
+#' long_0 <- -150                      # Center on Pacific
+#' ve_proj <- volcanic_eruptions %>%
+#'   project(proj, long_0) %>%         # project data
+#'   arrange(desc(VEI))                # and get nice plotting order
+#' # plot projected map and data
+#' ggworldmap(ve_proj, long_0 = long_0, proj = proj) +
+#'   geom_point(aes(size = VEI^4, color = VEI), alpha =.5) +
+#'   scale_color_distiller(palette = "Spectral")
+#'
 ggworldmap <- function(data = NULL, mapping = aes(x=long, y=lat), map = "world",
-    proj = NULL, long_0 = 0, long_min = -180 + long_0, long_max = 180 + long_0, 
+    proj = NULL, long_0 = 0, long_min = -180 + long_0, long_max = 180 + long_0,
     lat_min = -84, lat_max = 84, proj_extra = NULL, style = c("light"), ...,
     graticule = style, gratframe = style, degree = style, theme = style,
     environment = parent.frame()){
@@ -45,7 +84,7 @@ ggworldmap <- function(data = NULL, mapping = aes(x=long, y=lat), map = "world",
   # from match.arg
   styles <- eval(formals()$style)
   match.arg(style, styles)
-  
+
   p <- ggplot2::ggplot(data = data, mapping = mapping, environment = environment)
 
   # map (store args shared with other geoms)
@@ -57,10 +96,16 @@ ggworldmap <- function(data = NULL, mapping = aes(x=long, y=lat), map = "world",
     light = list(color = "gray90", fill = "gray90")
   )[[style]]
 
+  # remove default args that are set through aes
+  worldmap_aes_names <- names(mapping)
+  worldmap_aes <- vector("list", length(worldmap_aes_names))
+  names(worldmap_aes) <- worldmap_aes_names
+  worldmap_defs <- modifyList(worldmap_defs, worldmap_aes)
+
   worldmap_args <- modifyList(worldmap_defs, c(list(..., mapping = mapping, map = map), worldmap_shared_args))
-  
+
   p <- p + do.call(geom_worldmap, worldmap_args)
-  
+
   # graticules
   graticule_style <- graticule[[1]] %&&% match.arg(graticule[[1]], styles)
   if(!is.null(graticule_style)){ # add gggenomes graticule
@@ -100,6 +145,6 @@ ggworldmap <- function(data = NULL, mapping = aes(x=long, y=lat), map = "world",
     theme_args <- if(is.list(theme) && length(theme) >1) theme[-1] else list()
     p <- p + do.call(paste0("theme_worldmap_", theme), theme_args)
   }
-  
+
   p + coord_equal()
 }
