@@ -9,7 +9,7 @@ geom_graticule <- function(mapping = NULL, data = NULL, stat = "identity",
    position = "identity", proj = NULL, long_0 = 0,
    lat_min = -90, lat_max = 90, lat_by = 20, lat_n = NULL,
    long_min = -180 + long_0, long_max = 180 + long_0, long_by = 30,
-   long_n = NULL, proj_extra=NULL, ..., na.rm = FALSE,
+   long_n = NULL, proj_extra=NULL, ..., na.rm = TRUE,
    show.legend = NA, inherit.aes = FALSE){
 
   default_aes <- ggplot2::aes_(x=~long, y=~lat, group=~group)
@@ -27,7 +27,7 @@ geom_graticule <- function(mapping = NULL, data = NULL, stat = "identity",
 geom_gratframe <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", proj = NULL, long_0 = 0, lat_min = -90,
     lat_max = 90, long_min = -180 + long_0, long_max = 180 + long_0,
-    proj_extra=NULL, ..., na.rm = FALSE, show.legend = NA, inherit.aes = FALSE){
+    proj_extra=NULL, ..., na.rm = TRUE, show.legend = NA, inherit.aes = FALSE){
 
   default_aes <- ggplot2::aes_(x=~long, y=~lat, group=~group)
   mapping = aes_intersect(mapping, default_aes)
@@ -57,10 +57,12 @@ graticules <- function(proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
   if(length(lat_breaks > 0)) gl_args$norths <- lat_breaks
   if(length(long_breaks > 0)) gl_args$easts <- long_breaks
 
-  graticules <- do.call(sp::gridlines, gl_args) %>%
-    # to Spatial Lines Data Fram
-    sp::SpatialLinesDataFrame(data=data.frame(1:length(.)), match.ID = FALSE) %>%
-    map_data # to data.frame
+  graticules <- do.call(sp::gridlines, gl_args) %>% sl2df
 
   project(graticules, proj, long_0, proj_extra=proj_extra)
+}
+
+sl2df <- function(x){
+  x <- sp::SpatialLinesDataFrame(x, data=data.frame(1:length(x)), match.ID = FALSE)
+  suppressWarnings(ggplot2::map_data(x)) %>% as_tibble
 }
