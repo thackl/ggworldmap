@@ -6,7 +6,7 @@
 \usage{
 ggworldmap(data = NULL, mapping = aes(x = long, y = lat), map = "world",
   proj = NULL, long_0 = 0, long_min = -180 + long_0, long_max = 180 +
-  long_0, lat_min = -88, lat_max = 88, proj_extra = NULL,
+  long_0, lat_min = -84, lat_max = 84, proj_extra = NULL,
   style = c("light"), ..., graticule = style, gratframe = style,
   degree = style, theme = style, environment = parent.frame())
 }
@@ -50,6 +50,12 @@ ggplot object
 `ggworldmap()` is a short cut to create a [ggplot2::ggplot] with polygons of
 a world map polygons, graticules and degree labels. It also adds a customized
 theme and a fixed aspect ratio coordinate system ([ggplot2::coord_equal]).
+}
+\details{
+`lat_min/lat_max` default to 84°S/W, respectively. This is mainly because the
+polygon map that comes with ggplot2 only covers that range. Also, in most
+projections, those extreme latitudes are heavily distorted and plotting them
+doesn't make sense anyway.
 }
 \examples{
 ggworldmap()

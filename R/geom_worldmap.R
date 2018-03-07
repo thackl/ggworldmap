@@ -4,7 +4,7 @@
 #' @export
 geom_worldmap <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", map = 'world', proj = NULL, long_0 = 0, long_min = -180 + long_0,
-    long_max = 180 + long_0, lat_min = -90, lat_max = 90,
+    long_max = 180 + long_0, lat_min = -84, lat_max = 84,
     proj_extra = NULL, ..., na.rm = FALSE, show.legend = NA,
     inherit.aes = FALSE){
 
@@ -20,9 +20,10 @@ geom_worldmap <- function(mapping = NULL, data = NULL, stat = "identity",
 }
 #' @export
 worldmap <- function(map = "world", proj = NULL, long_0 = 0, long_min = -180 + long_0,
-    long_max = 180 + long_0, lat_min = -90, lat_max = 90, proj_extra = NULL, fill=TRUE, plot=FALSE,
+    long_max = 180 + long_0, lat_min = -84, lat_max = 84, proj_extra = NULL, fill=TRUE, plot=FALSE,
     ...){
 
+  cat(lat_min, lat_max, "\n")
   # get map as SpatialPolygons
   if(is.character(map)){
     map <- map2sp(maps::map(map, fill=fill, plot=plot))
@@ -33,8 +34,8 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0, long_min = -180 + l
   long_0 <- long_0 %||% 0
   long_max <- long_max %||% ( 180 + long_0)
   long_min <- long_min %||% (-180 + long_0)
-  lat_min <- lat_min %||% -90
-  lat_max <- lat_max %||% 90
+  lat_min <- lat_min %||% -84
+  lat_max <- lat_max %||% 84
 
   d <- .00001 # nugde crop off by this tiny bit to prevent overlaps between boxes
   # split/crop & bind to match long_0
