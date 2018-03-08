@@ -15,14 +15,15 @@ library(tidyverse)
 library(ggworldmap)
 
 # a nice projected map with graticules and degree labels
-ggworldmap(proj = "robin")
+ggworldmap(proj = "moll", degree = list("light", long_by = 80))
 
 # and short for
+proj <- "moll"
 ggplot() +
-  geom_worldmap(proj = "robin", color = "gray90", fill = "gray90") +
-  geom_graticule(proj = "robin", color = "gray80") +
-  geom_gratframe(proj = "robin", color = "gray80") +
-  geom_degree(proj = "robin", color = "gray80") +
+  geom_worldmap(proj = proj, color = "gray90", fill = "gray90") +
+  geom_graticule(proj = proj, color = "gray80") +
+  geom_gratframe(proj = proj, color = "gray80") +
+  geom_degree(proj = proj, color = "gray80", long_by = 80) +
   theme_worldmap_light() +
   coord_equal()
 
@@ -33,16 +34,17 @@ ggsave("img/ggworldplot.png", width = 12, height = 6, type = "cairo")
 
 #+BEGIN_SRC R
 # Pacific centered map with colored countries
-ggworldmap(proj = "robin", long_0 = -120, mapping = aes(fill=group),
-    color = "black", show.legend = FALSE,
-    graticule = list("light", color = "grey20"),
-    degree = list("light", color = "grey30", family = "Times New Roman")) +
+long_0 <- 110
+ggworldmap(proj = "ortho", long_0 = long_0, mapping = aes(fill=group),
+    long_min = long_0-90, long_max = long_0+90, color = "black",
+    show.legend = FALSE, graticule = list("light", color = "grey20"),
+    degree = list("light", long_n = 3, color = "grey30", family = "Times New Roman")) +
   scale_fill_distiller(palette = "Pastel2")
 
-ggsave("img/pacific-countries.png", width = 12, height = 6, type = "cairo")
+ggsave("img/east-asia-countries.png", width = 12, height = 6, type = "cairo")
 #+END_SRC
 
-[[img/pacific-countries.png]]
+[[img/east-asia-countries.png]]
 
 #+BEGIN_SRC R
 # The Pacific Ring of Fire
