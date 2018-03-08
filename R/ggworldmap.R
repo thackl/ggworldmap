@@ -1,3 +1,6 @@
+#' @import ggplot2
+NULL
+
 #' Create a ggworldmap with graticules and degrees
 #'
 #' `ggworldmap()` is a short cut to create a [ggplot2::ggplot] with polygons of
