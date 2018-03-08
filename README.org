@@ -1,7 +1,74 @@
+** Inspiration
+
+- http://rpsychologist.com/working-with-shapefiles-projections-and-world-maps-in-ggplot
+- https://stackoverflow.com/questions/10620862/use-different-center-than-the-prime-meridian-in-plotting-a-world-map
+- https://gist.github.com/rafapereirabr/9a36c2e5ff04aa285fa3
+- https://web.stanford.edu/~cengel/cgi-bin/anthrospace/great-circles-on-a-recentered-worldmap-in-ggplot
+- https://rpubs.com/benmschmidt/Recenter
+- https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/
+- https://gist.github.com/valentinitnelav/c7598fcfc8e53658f66feea9d3bafb40
+
+** Usage
 
 #+BEGIN_SRC R
+library(tidyverse)
 library(ggworldmap)
 
+# a nice projected map with graticules and degree labels
+ggworldmap(proj = "robin")
+
+# and short for
+ggplot() +
+  geom_worldmap(proj = "robin", color = "gray90", fill = "gray90") +
+  geom_graticule(proj = "robin", color = "gray80") +
+  geom_gratframe(proj = "robin", color = "gray80") +
+  geom_degree(proj = "robin", color = "gray80") +
+  theme_worldmap_light() +
+  coord_equal()
+
+ggsave("ggworldplot.png", width = 12, height = 6)
+#+END_SRC
+
+[[img/ggworldplot.png]]
+
+#+BEGIN_SRC R
+# Pacific centered map with colored countries
+ggworldmap(proj = "robin", long_0 = -120, mapping = aes(fill=group),
+    color = "black", show.legend = FALSE,
+    graticule = list("light", color = "grey20"),
+    degree = list("light", color = "grey30", family = "Times New Roman")) +
+  scale_fill_distiller(palette = "Pastel2")
+
+ggsave("pacific-countries.png", width = 12, height = 6)
+#+END_SRC
+
+[[img/pacific-colors.png]]
+
+#+BEGIN_SRC R
+# The Pacific Ring of Fire
+data(volcanic_eruptions)            # load example data
+proj <- "robin"                     # Robinson projection
+long_0 <- -150                      # Center on Pacific
+ve_proj <- volcanic_eruptions %>%
+  project(proj, long_0) %>%         # project data
+  arrange(desc(VEI))                # and get nice plotting order
+# plot projected map and data
+ggworldmap(ve_proj, long_0 = long_0, proj = proj) +
+  geom_point(aes(size = VEI^4, color = VEI), alpha =.5) +
+  scale_color_distiller(palette = "Spectral")
+
+ggsave("pacific-ring-of-fire.png", width = 12, height = 6)
+#+END_SRC
+
+[[img/pacific-ring-of-fire.png]]
+
+#+BEGIN_SRC R
+# TODO: Project and Concentrate Data
+
+#+END_SRC
+
+
+#+BEGIN_SRC R
 proj <- "robin" # use Robinson projection
 long_0 <- -120  # center on Pacific
 lat_min <- -70  # and clip the poles
@@ -54,4 +121,4 @@ gg <- ggplot(mapping = aes(x=long, y=lat)) +
   facet_wrap(~Type, ncol=2, strip.position = "left")
 #+END_SRC
 
-[[volcanic-eruptions.png]]
+[[img/volcanic-eruptions.png]]

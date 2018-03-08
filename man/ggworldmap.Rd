@@ -96,9 +96,9 @@ ggworldmap(
 data(volcanic_eruptions)            # load example data
 proj <- "robin"                     # Robinson projection
 long_0 <- -150                      # Center on Pacific
-ve_proj <- volcanic_eruptions \%>\%     
+ve_proj <- volcanic_eruptions \%>\%
   project(proj, long_0) \%>\%         # project data
-  arrange(desc(VEI))                # and get nice plotting order 
+  arrange(desc(VEI))                # and get nice plotting order
 # plot projected map and data
 ggworldmap(ve_proj, long_0 = long_0, proj = proj) +
   geom_point(aes(size = VEI^4, color = VEI), alpha =.5) +
