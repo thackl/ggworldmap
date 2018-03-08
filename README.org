@@ -26,7 +26,7 @@ ggplot() +
   theme_worldmap_light() +
   coord_equal()
 
-ggsave("ggworldplot.png", width = 12, height = 6)
+ggsave("img/ggworldplot.png", width = 12, height = 6, type = "cairo")
 #+END_SRC
 
 [[img/ggworldplot.png]]
@@ -39,10 +39,10 @@ ggworldmap(proj = "robin", long_0 = -120, mapping = aes(fill=group),
     degree = list("light", color = "grey30", family = "Times New Roman")) +
   scale_fill_distiller(palette = "Pastel2")
 
-ggsave("pacific-countries.png", width = 12, height = 6)
+ggsave("img/pacific-countries.png", width = 12, height = 6, type = "cairo")
 #+END_SRC
 
-[[img/pacific-countries.png]]
+[[img/pacific-colors.png]]
 
 #+BEGIN_SRC R
 # The Pacific Ring of Fire
@@ -57,7 +57,7 @@ ggworldmap(ve_proj, long_0 = long_0, proj = proj) +
   geom_point(aes(size = VEI^4, color = VEI), alpha =.5) +
   scale_color_distiller(palette = "Spectral")
 
-ggsave("pacific-ring-of-fire.png", width = 12, height = 6)
+ggsave("img/pacific-ring-of-fire.png", width = 12, height = 6, type = "cairo")
 #+END_SRC
 
 [[img/pacific-ring-of-fire.png]]
