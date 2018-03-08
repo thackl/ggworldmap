@@ -8,8 +8,8 @@ https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of
 \usage{
 geom_worldmap(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", map = "world", proj = NULL, long_0 = 0,
-  long_min = -180 + long_0, long_max = 180 + long_0, lat_min = -84,
-  lat_max = 84, proj_extra = NULL, ..., na.rm = FALSE, show.legend = NA,
+  long_min = -180 + long_0, long_max = 180 + long_0, lat_min = -80,
+  lat_max = 80, proj_extra = NULL, ..., na.rm = FALSE, show.legend = NA,
   inherit.aes = FALSE)
 }
 \description{
