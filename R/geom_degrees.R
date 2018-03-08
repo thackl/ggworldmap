@@ -3,7 +3,7 @@ geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
     lat_by = 20, lat_n = NULL, lat_at = c(long_min, long_max), lat_nudge_x = 5,
     lat_nudge_y = 0, lat_vjust = "center", lat_hjust = "outward",
-    long_min = -180 + long_0, long_max = 180 + long_0, long_by = 30,
+    long_min = -180 + long_0, long_max = 180 + long_0, long_by = 40,
     long_n = NULL, long_at = c(lat_min, lat_max), long_nudge_x = 0,
     long_nudge_y =5, long_vjust = "outward", long_hjust = "center",
     proj_extra=NULL, ..., na.rm = FALSE, show.legend = NA, inherit.aes = FALSE){
@@ -37,7 +37,7 @@ geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
 degrees <- function(proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
     lat_by = 20, lat_n = NULL, lat_at = c(long_min, long_max),
     lat_nudge_x = 5, lat_nudge_y = 0, long_min = -180 + long_0,
-    long_max = 180 + long_0, long_by = 30, long_n = NULL,
+    long_max = 180 + long_0, long_by = 40, long_n = NULL,
     long_at = c(lat_min, lat_max), long_nudge_x = 0, long_nudge_y = 10,
     proj_extra=NULL){
 

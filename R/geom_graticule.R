@@ -8,7 +8,7 @@
 geom_graticule <- function(mapping = NULL, data = NULL, stat = "identity",
    position = "identity", proj = NULL, long_0 = 0,
    lat_min = -90, lat_max = 90, lat_by = 20, lat_n = NULL,
-   long_min = -180 + long_0, long_max = 180 + long_0, long_by = 30,
+   long_min = -180 + long_0, long_max = 180 + long_0, long_by = 40,
    long_n = NULL, proj_extra=NULL, ..., na.rm = TRUE,
    show.legend = NA, inherit.aes = FALSE){
 
@@ -43,7 +43,7 @@ geom_gratframe <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @export
 graticules <- function(proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
     lat_by = 20, lat_n = NULL, long_min = -180 + long_0, long_max = 180 + long_0,
-    long_by = 30, long_n = NULL, proj_extra=NULL){
+    long_by = 40, long_n = NULL, proj_extra=NULL){
 
   lat_breaks <- compute_breaks(lat_min, lat_max, lat_by, lat_n)
   long_breaks <- compute_breaks(long_min, long_max, long_by, long_n)
