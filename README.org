@@ -42,7 +42,7 @@ ggworldmap(proj = "robin", long_0 = -120, mapping = aes(fill=group),
 ggsave("pacific-countries.png", width = 12, height = 6)
 #+END_SRC
 
-[[img/pacific-colors.png]]
+[[img/pacific-countries.png]]
 
 #+BEGIN_SRC R
 # The Pacific Ring of Fire
