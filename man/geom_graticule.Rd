@@ -7,19 +7,19 @@
 \title{Graticules}
 \usage{
 geom_graticule(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", proj = NULL, long_0 = 0, lat_min = -90,
-  lat_max = 90, lat_by = 20, lat_n = NULL, long_min = -180 + long_0,
+  position = "identity", proj = NULL, long_0 = 0, lat_min = -80,
+  lat_max = 80, lat_by = 20, lat_n = NULL, long_min = -180 + long_0,
   long_max = 180 + long_0, long_by = 40, long_n = NULL,
   proj_extra = NULL, ..., na.rm = TRUE, show.legend = NA,
   inherit.aes = FALSE)
 
 geom_gratframe(mapping = NULL, data = NULL, stat = "identity",
-  position = "identity", proj = NULL, long_0 = 0, lat_min = -90,
-  lat_max = 90, long_min = -180 + long_0, long_max = 180 + long_0,
+  position = "identity", proj = NULL, long_0 = 0, lat_min = -80,
+  lat_max = 80, long_min = -180 + long_0, long_max = 180 + long_0,
   proj_extra = NULL, ..., na.rm = TRUE, show.legend = NA,
   inherit.aes = FALSE)
 
-graticules(proj = NULL, long_0 = 0, lat_min = -90, lat_max = 90,
+graticules(proj = NULL, long_0 = 0, lat_min = -80, lat_max = 80,
   lat_by = 20, lat_n = NULL, long_min = -180 + long_0, long_max = 180 +
   long_0, long_by = 40, long_n = NULL, proj_extra = NULL)
 }
