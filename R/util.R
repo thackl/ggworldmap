@@ -12,8 +12,8 @@ if_null_else <- function(cond, true, false){
 
 compute_breaks <- function(min, max, by, n = NULL){
   if(is.null(n)){
-    if(min < 0){ # try to include zero
-      c(seq(-by, min, by=-by),
+    if(min < 0 && max > 0){ # try to include zero
+      c(rev(seq(-by, min, by=-by)),
         seq(0, max, by=by))
     }else{
       seq(min, max, by=by)
