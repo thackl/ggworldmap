@@ -22,3 +22,19 @@ compute_breaks <- function(min, max, by, n = NULL){
     seq(min, max, length.out=n)
   }
 }
+
+vars_lat_long <- function (vars, lat = lat, long = long){
+  lat_var <- tidyselect::vars_pull(vars, !! enquo(lat))
+  long_var <- tidyselect::vars_pull(vars, !! enquo(long))
+  c(lat_var, long_var)
+}
+
+glue_proj4 <- function(proj, long_0){
+  if(is.null(proj) || proj == "")
+    stop("projection required")
+  if(!substr(proj,1,1) == "+")
+    proj <- paste0("+proj=", proj)
+  if(!(is.null(long_0) || long_0 == ""))
+    proj <- paste0(proj, " +lon_0=", long_0)
+  proj
+}
