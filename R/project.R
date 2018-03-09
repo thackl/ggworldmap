@@ -48,7 +48,9 @@ project.tbl_df <- function(.data, proj = NULL, long_0 = NULL,
   ll_vars <- vars_lat_long(names(.data), !! enquo(lat), !! enquo(long))
   ll2_vars <- c(lat_new %||% ll_vars[1], long_new %||% ll_vars[2])
 
-  .data[ll2_vars] <- rgdal::project(as.matrix(.data[ll_vars]), proj = proj, ...) *
-    scale_factor
+  .data[ll2_vars] <- .data[rev(ll_vars)] %>%
+    as.matrix() %>%
+    rgdal::project(proj = proj, ...) %>%
+    .[,c(2,1)] * scale_factor # rgdal::project is long/lat not lat/long
   .data
 }
