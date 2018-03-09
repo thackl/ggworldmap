@@ -1,7 +1,7 @@
 #' Worldmap
 #'
 #' Plot a polygon map, in various projections and with shifted central meridian.
-#' 
+#'
 #' resplit the map polygons at the new edges for rotate shift
 #' this is magic to fix polygons running outside the shifted world bounds
 #' \url{https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/}
@@ -41,31 +41,22 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0,
     long_min = -180 + long_0, long_max = 180 + long_0, lat_min = -80,
     lat_max = 80, fill=TRUE, plot=FALSE, ...){
 
-  # get map as SpatialPolygons
-  if(is.character(map)){
-    map <- map2sp(maps::map(map, fill=fill, plot=plot))
-  } else if(!is(map, "SpatialPolygons")) {
-    stop("unknown map format")
-  }
-
   long_0 <- long_0 %||% 0
   long_max <- long_max %||% ( 180 + long_0)
   long_min <- long_min %||% (-180 + long_0)
   lat_min <- lat_min %||% -80
   lat_max <- lat_max %||% 80
 
-  d <- .00001 # nugde crop off by this tiny bit to prevent overlaps between boxes
-  # split/crop & bind to match long_0
-  if(long_min < -180 && long_max > 180){ # running outside the default polygon map
-    stop("Cannot handle long_min and long_max both outside -180:180")
-  }else if(long_min < -180 || long_max > 180){ # running outside the default polygon map
-    map_a <- map %>% crop(wrap_dd(long_min) + d, 180, lat_min, lat_max)
-    map_b <- map %>% crop(-180, wrap_dd(long_max) - d, lat_min, lat_max)
-    map <- rbind(map_a, map_b, makeUniqueIDs = TRUE)
-  }else{
-    map <- map %>% crop(long_min, long_max, lat_min, lat_max)
+  # get map as SpatialPolygons
+  if(is.character(map)){
+    map <- map2sp(maps::map(map, wrap = c(-180, 180) + long_0, fill=fill, plot=plot))
+  } else if(!is(map, "SpatialPolygons")) {
+    stop("unknown map format")
   }
 
+  map <- map %>% crop(long_min, long_max, lat_min, lat_max)
+
+  d <- .00001 # nudge crop off by this tiny bit to prevent overlaps between boxes
   sp2df(map) %>%
     smooth_crop_lines(long_min, long_max, d = d*2) %>%
     project(proj, long_0)
@@ -137,7 +128,7 @@ smooth_crop_lines <- function(mr, long_min, long_max, d = 0.00002){
       region=fr$region,
       subregion=fr$subregion
     ))
-    q
+
     ## adjust order in polygon df
     mr$order[(i+1):length(mr$order)] = mr$order[(i+1):length(mr$order)] + bn.n +1
 
