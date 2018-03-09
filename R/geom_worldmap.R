@@ -1,27 +1,45 @@
+#' Worldmap
+#'
+#' Plot a polygon map, in various projections and with shifted central meridian.
+#' 
 #' resplit the map polygons at the new edges for rotate shift
 #' this is magic to fix polygons running outside the shifted world bounds
-#' https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/
+#' \url{https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/}
+#' @inheritParams ggplot2::geom_point
+#' @inheritParams project
+#' @inheritParams worldmap
+#' @param long_min,long_max Longitude limits, defaults to ±180° from long_0.
+#' @param lat_min,lat_max Latitude limits, defaults to ±80°.
+#' @param data If `NULL` uses [worldmap()] to compute the data.
 #' @export
+#' @examples
+#' ggplot() + geom_worldmap()
 geom_worldmap <- function(mapping = NULL, data = NULL, stat = "identity",
-    position = "identity", map = 'world', proj = NULL, long_0 = 0, long_min = -180 + long_0,
-    long_max = 180 + long_0, lat_min = -80, lat_max = 80,
-    proj_extra = NULL, ..., na.rm = FALSE, show.legend = NA,
-    inherit.aes = FALSE){
+    position = "identity", map = 'world', proj = NULL, long_0 = 0,
+    long_min = -180 + long_0, long_max = 180 + long_0, lat_min = -80,
+    lat_max = 80, ..., na.rm = FALSE, show.legend = NA, inherit.aes = FALSE){
 
   default_aes <- ggplot2::aes_(x=~long, y=~lat, group=~group)
   mapping = aes_intersect(mapping, default_aes)
 
-  data <- data %||% worldmap(map = map, proj = proj, long_0 = long_0, long_min = long_min,
-      long_max = long_max, lat_min = lat_min, lat_max = lat_max, proj_extra = proj_extra)
+  data <- data %||% worldmap(map = map, proj = proj, long_0 = long_0,
+      long_min = long_min, long_max = long_max, lat_min = lat_min,
+      lat_max = lat_max)
 
   ggplot2::geom_polygon(mapping = mapping, data = data, stat = stat,
       position = position, ..., na.rm = na.rm, show.legend = show.legend,
       inherit.aes = inherit.aes)
 }
+
+#' Worldmap Polygons
+#'
+#' @inheritParams project
+#' @param long_min,long_max Longitude limits, defaults to ±180° from long_0.
+#' @param lat_min,lat_max Latitude limits, defaults to ±80°.
 #' @export
-worldmap <- function(map = "world", proj = NULL, long_0 = 0, long_min = -180 + long_0,
-    long_max = 180 + long_0, lat_min = -80, lat_max = 80, proj_extra = NULL, fill=TRUE, plot=FALSE,
-    ...){
+worldmap <- function(map = "world", proj = NULL, long_0 = 0,
+    long_min = -180 + long_0, long_max = 180 + long_0, lat_min = -80,
+    lat_max = 80, fill=TRUE, plot=FALSE, ...){
 
   # get map as SpatialPolygons
   if(is.character(map)){
@@ -50,7 +68,7 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0, long_min = -180 + l
 
   sp2df(map) %>%
     smooth_crop_lines(long_min, long_max, d = d*2) %>%
-    project(proj, long_0, proj_extra = proj_extra)
+    project(proj, long_0)
 }
 
 sp_box <- function(long_min, long_max, lat_min = -90, lat_max = 90,

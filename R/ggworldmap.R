@@ -13,9 +13,9 @@ NULL
 #' doesn't make sense anyway.
 #'
 #' @inheritParams ggplot2::ggplot
-#' @inheritParams ggworldmap::geom_worldmap
+#' @inheritParams geom_worldmap
 #' @param style Default style for the map, graticules, degrees and the default
-#' theme. Choices: "light".
+#' theme. Choices: "light"
 #' @param graticule Style and arguments passed on to [geom_graticule]. Either a
 #' single style string, a list of args with the style as first argument, or NULL
 #' to disable graticules.
@@ -28,6 +28,8 @@ NULL
 #' @param theme Style and arguments passed on to `theme_worldmap_<style>`
 #' themes. Either a single style string, a list of args with the style as first
 #' argument, or NULL to disable a default theme.
+#' @param long_min,long_max Longitude limits, defaults to ±180° from long_0.
+#' @param lat_min,lat_max Latitude limits, defaults to ±80°.
 #' @param ... Other arguments passed on to [geom_worldmap]
 #' @export
 #' @return ggplot object
@@ -80,7 +82,7 @@ NULL
 #'
 ggworldmap <- function(data = NULL, mapping = aes(x=long, y=lat), map = "world",
     proj = NULL, long_0 = 0, long_min = -180 + long_0, long_max = 180 + long_0,
-    lat_min = -80, lat_max = 80, proj_extra = NULL, style = c("light"), ...,
+    lat_min = -80, lat_max = 80, style = c("light"), ...,
     graticule = style, gratframe = style, degree = style, theme = style,
     environment = parent.frame()){
 
@@ -92,8 +94,7 @@ ggworldmap <- function(data = NULL, mapping = aes(x=long, y=lat), map = "world",
 
   # map (store args shared with other geoms)
   worldmap_shared_args <- list(proj = proj, long_0 = long_0, long_min = long_min,
-      long_max = long_max, lat_min = lat_min, lat_max = lat_max,
-      proj_extra = proj_extra)
+      long_max = long_max, lat_min = lat_min, lat_max = lat_max)
 
   worldmap_defs <- list(
     light = list(color = "gray90", fill = "gray90")

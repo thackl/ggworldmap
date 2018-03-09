@@ -2,18 +2,66 @@
 % Please edit documentation in R/geom_worldmap.R
 \name{geom_worldmap}
 \alias{geom_worldmap}
-\title{resplit the map polygons at the new edges for rotate shift
-this is magic to fix polygons running outside the shifted world bounds
-https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/}
+\title{Worldmap}
 \usage{
 geom_worldmap(mapping = NULL, data = NULL, stat = "identity",
   position = "identity", map = "world", proj = NULL, long_0 = 0,
   long_min = -180 + long_0, long_max = 180 + long_0, lat_min = -80,
-  lat_max = 80, proj_extra = NULL, ..., na.rm = FALSE, show.legend = NA,
+  lat_max = 80, ..., na.rm = FALSE, show.legend = NA,
   inherit.aes = FALSE)
 }
+\arguments{
+\item{mapping}{Set of aesthetic mappings created by \code{\link[=aes]{aes()}} or
+\code{\link[=aes_]{aes_()}}. If specified and \code{inherit.aes = TRUE} (the
+default), it is combined with the default mapping at the top level of the
+plot. You must supply \code{mapping} if there is no plot mapping.}
+
+\item{data}{If `NULL` uses [worldmap()] to compute the data.}
+
+\item{stat}{The statistical transformation to use on the data for this
+layer, as a string.}
+
+\item{position}{Position adjustment, either as a string, or the result of
+a call to a position adjustment function.}
+
+\item{proj}{A name of a cartographic projection or a complete proj4-string
+specifying a transformation supported by the \href{http://proj4.org}{PROJ.4}
+project.}
+
+\item{long_0}{Latitude of the central meridian (added to the proj4-string as
+`+lon_0=<long_0>`}
+
+\item{long_min, long_max}{Longitude limits, defaults to ±180° from long_0.}
+
+\item{lat_min, lat_max}{Latitude limits, defaults to ±80°.}
+
+\item{...}{other arguments passed on to \code{\link[=layer]{layer()}}. These are
+often aesthetics, used to set an aesthetic to a fixed value, like
+\code{color = "red"} or \code{size = 3}. They may also be parameters
+to the paired geom/stat.}
+
+\item{na.rm}{If \code{FALSE}, the default, missing values are removed with
+a warning. If \code{TRUE}, missing values are silently removed.}
+
+\item{show.legend}{logical. Should this layer be included in the legends?
+\code{NA}, the default, includes if any aesthetics are mapped.
+\code{FALSE} never includes, and \code{TRUE} always includes.
+It can also be a named logical vector to finely select the aesthetics to
+display.}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
+}
 \description{
+Plot a polygon map, in various projections and with shifted central meridian.
+}
+\details{
 resplit the map polygons at the new edges for rotate shift
 this is magic to fix polygons running outside the shifted world bounds
-https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/
+\url{https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/}
+}
+\examples{
+ggplot() + geom_worldmap()
 }

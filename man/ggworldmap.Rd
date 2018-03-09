@@ -6,9 +6,9 @@
 \usage{
 ggworldmap(data = NULL, mapping = aes(x = long, y = lat), map = "world",
   proj = NULL, long_0 = 0, long_min = -180 + long_0, long_max = 180 +
-  long_0, lat_min = -80, lat_max = 80, proj_extra = NULL,
-  style = c("light"), ..., graticule = style, gratframe = style,
-  degree = style, theme = style, environment = parent.frame())
+  long_0, lat_min = -80, lat_max = 80, style = c("light"), ...,
+  graticule = style, gratframe = style, degree = style, theme = style,
+  environment = parent.frame())
 }
 \arguments{
 \item{data}{Default dataset to use for plot. If not already a data.frame,
@@ -18,8 +18,19 @@ must be supplied in each layer added to the plot.}
 \item{mapping}{Default list of aesthetic mappings to use for plot.
 If not specified, must be supplied in each layer added to the plot.}
 
+\item{proj}{A name of a cartographic projection or a complete proj4-string
+specifying a transformation supported by the \href{http://proj4.org}{PROJ.4}
+project.}
+
+\item{long_0}{Latitude of the central meridian (added to the proj4-string as
+`+lon_0=<long_0>`}
+
+\item{long_min, long_max}{Longitude limits, defaults to ±180° from long_0.}
+
+\item{lat_min, lat_max}{Latitude limits, defaults to ±80°.}
+
 \item{style}{Default style for the map, graticules, degrees and the default
-theme. Choices: "light".}
+theme. Choices: "light"}
 
 \item{...}{Other arguments passed on to [geom_worldmap]}
 

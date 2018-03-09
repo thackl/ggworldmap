@@ -1,3 +1,4 @@
+#' @rdname geom_graticule
 #' @export
 geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
     position = "identity", proj = NULL, long_0 = 0, lat_min = -80, lat_max = 80,
@@ -6,7 +7,7 @@ geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
     long_min = -180 + long_0, long_max = 180 + long_0, long_by = 40,
     long_n = NULL, long_at = c(lat_min, lat_max), long_nudge_x = 0,
     long_nudge_y =5, long_vjust = "outward", long_hjust = "center",
-    proj_extra=NULL, ..., na.rm = FALSE, show.legend = NA, inherit.aes = FALSE){
+    ..., na.rm = FALSE, show.legend = NA, inherit.aes = FALSE){
 
   long_0 <- long_0 %||% 0
 
@@ -17,7 +18,7 @@ geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
     lat_max = lat_max, lat_by = lat_by, lat_n = lat_n, lat_at = lat_at,
     lat_nudge_x = lat_nudge_x, lat_nudge_y = lat_nudge_y, long_min = long_min,
     long_max = long_max, long_by = long_by, long_n = long_n, long_at = long_at,
-    long_nudge_x = long_nudge_x, long_nudge_y = long_nudge_y, proj_extra=proj_extra)
+    long_nudge_x = long_nudge_x, long_nudge_y = long_nudge_y)
 
   # use different vjust/hjust for lat/long if that information is available
   if("type" %in% names(data)){
@@ -33,13 +34,14 @@ geom_degree <- function(mapping = NULL, data = NULL, stat = "identity",
       na.rm = na.rm, show.legend = show.legend, inherit.aes = inherit.aes)
   }
 }
+
+#' @rdname geom_graticule
 #' @export
 degrees <- function(proj = NULL, long_0 = 0, lat_min = -80, lat_max = 80,
     lat_by = 20, lat_n = NULL, lat_at = c(long_min, long_max),
     lat_nudge_x = 5, lat_nudge_y = 0, long_min = -180 + long_0,
     long_max = 180 + long_0, long_by = 40, long_n = NULL,
-    long_at = c(lat_min, lat_max), long_nudge_x = 0, long_nudge_y = 10,
-    proj_extra=NULL){
+    long_at = c(lat_min, lat_max), long_nudge_x = 0, long_nudge_y = 10){
 
   long_0 <- long_0 %||% 0
 
@@ -57,8 +59,8 @@ degrees <- function(proj = NULL, long_0 = 0, lat_min = -80, lat_max = 80,
     label = long %>% wrap_dd %>% sp::dd2dms() %>% pretty_dms)
 
   if(!is.null(proj)){
-    degrees_lat %<>% project(proj, long_0, proj_extra=proj_extra)
-    degrees_long %<>% project(proj, long_0, proj_extra=proj_extra)
+    degrees_lat %<>% project(proj, long_0)
+    degrees_long %<>% project(proj, long_0)
   }
 
   degrees_lat <- mutate(
