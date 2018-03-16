@@ -16,9 +16,7 @@
 #' @inheritParams project
 #' @export
 #' @examples
-#' library(tidyverse)
-#'
-#' df <- tibble(
+#' df <- tibble::tibble(
 #'   foo = rep(LETTERS[1:3], each = 3),
 #'   lat = rnorm(9, rep(c(-30, -20, 50), each = 3)),
 #'   long = rnorm(9, rep(c(-90, -100, 85), each = 3)))
@@ -37,7 +35,7 @@ concentrate.data.frame <- function(.data, ...){
 #' @export
 concentrate.tbl_df <- function(.data, lambda = .05, lat = lat, long = long,
     lat_new = NULL, long_new = NULL, group_var = NULL, ...){
-  ll_vars <- vars_lat_long(names(.data), !! enquo(lat), !! enquo(long))
+  ll_vars <- vars_lat_long(names(.data), !! rlang::enquo(lat), !! rlang::enquo(long))
   ll2_vars <- c(lat_new %||% ll_vars[1], long_new %||% ll_vars[2])
   ll3_vars <- ll2_vars
 
@@ -53,10 +51,10 @@ concentrate.tbl_df <- function(.data, lambda = .05, lat = lat, long = long,
 
   # centroid xy
   .data[ll3_vars] <- .data[ll_vars] %>%
-    mutate(.i = i) %>%
-    group_by(.i) %>% mutate(
-      !! ll2_vars[1] := mean(!! enquo(lat)),
-      !! ll2_vars[2] := mean(!! enquo(long))) %>%
+    dplyr::mutate(.i = i) %>%
+    dplyr::group_by(.i) %>% dplyr::mutate(
+      !! ll2_vars[1] := mean(!! rlang::enquo(lat)),
+      !! ll2_vars[2] := mean(!! rlang::enquo(long))) %>%
     .[ll2_vars]
   .data
 }

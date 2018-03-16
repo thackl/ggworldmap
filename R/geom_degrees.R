@@ -63,11 +63,11 @@ degrees <- function(proj = NULL, long_0 = 0, lat_min = -80, lat_max = 80,
     degrees_long %<>% project(proj, long_0)
   }
 
-  degrees_lat <- mutate(
+  degrees_lat <- dplyr::mutate(
     degrees_lat,
     lat = ifelse(lat >= 0, lat + lat_nudge_y, lat - lat_nudge_y),
     long = ifelse(long >= 0, long + lat_nudge_x, long - lat_nudge_x))
-  degrees_long <- mutate(
+  degrees_long <- dplyr::mutate(
     degrees_long,
     lat = ifelse(lat >= 0, lat + long_nudge_y, lat - long_nudge_y),
     long = ifelse(long >= 0, long + long_nudge_x, long - long_nudge_x))

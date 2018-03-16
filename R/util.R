@@ -32,8 +32,8 @@ compute_breaks <- function(min, max, by, n = NULL){
 }
 
 vars_lat_long <- function (vars, lat = lat, long = long){
-  lat_var <- tidyselect::vars_pull(vars, !! enquo(lat))
-  long_var <- tidyselect::vars_pull(vars, !! enquo(long))
+  lat_var <- tidyselect::vars_pull(vars, !! rlang::enquo(lat))
+  long_var <- tidyselect::vars_pull(vars, !! rlang::enquo(long))
   c(lat_var, long_var)
 }
 

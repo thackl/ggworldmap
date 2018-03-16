@@ -33,11 +33,9 @@ results. If NULL, the original latitude/longitude columns are used.}
 magrittr/tidyverse-style pipes and variable selection syntax.
 }
 \examples{
-library(tidyverse)
-
-tibble(lat = c(-45,0,45), long = 60, stuff = LETTERS[1:3]) \%>\%
+tibble::tibble(lat = c(-45,0,45), long = 60, stuff = LETTERS[1:3]) \%>\%
   project("robin", 90)
 
-tibble(stuff = LETTERS[1:3], LAT = c(-45,0,45), LON = 60) \%>\%
+tibble::tibble(stuff = LETTERS[1:3], LAT = c(-45,0,45), LON = 60) \%>\%
   project("robin", 90, 1, LAT, LON, "lat robin [m]", "long robin [m]")
 }

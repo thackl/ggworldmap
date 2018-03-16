@@ -31,9 +31,7 @@ declutter observations and reduce locally scattered groups to a few locations
 of interest.
 }
 \examples{
-library(tidyverse)
-
-df <- tibble(
+df <- tibble::tibble(
   foo = rep(LETTERS[1:3], each = 3),
   lat = rnorm(9, rep(c(-30, -20, 50), each = 3)),
   long = rnorm(9, rep(c(-90, -100, 85), each = 3)))
