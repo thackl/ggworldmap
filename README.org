@@ -1,3 +1,7 @@
+-------------header image--------------
+
+Description & Motivation
+
 ** Inspiration
 
 - http://rpsychologist.com/working-with-shapefiles-projections-and-world-maps-in-ggplot
@@ -9,6 +13,12 @@
 - https://gist.github.com/valentinitnelav/c7598fcfc8e53658f66feea9d3bafb40
 
 ** Usage
+
+#+BEGIN_SRC R
+library(devtools)
+devtools::install_github("thackl/ggworldmap")
+#+END_SRC
+
 
 #+BEGIN_SRC R
 library(tidyverse)

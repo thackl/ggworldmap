@@ -1,3 +1,11 @@
+#' @importFrom magrittr %>%
+#' @export
+magrittr::`%>%`
+
+#' @importFrom magrittr %<>%
+#' @export
+magrittr::`%<>%`
+
 `%||%` <- function(x, y){
   if(is.null(x)) y else x
 }

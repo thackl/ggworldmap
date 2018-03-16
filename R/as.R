@@ -38,11 +38,16 @@ as_map.SpatialPolygonsDataFrame <- function(x, region = ".", exact = FALSE, plot
                        fill = TRUE, ...))
 }
 
-
+#' @importFrom tibble as_tibble
+#' @export
+tibble::as_tibble
+#' @importFrom tibble as_tibble
 #' @export
 as_tibble.map <- function(x, ...){
-  tibble::as_tibble(ggplot2::fortify(x))
+  as_tibble(ggplot2::fortify(x))
 }
+
+
 #' @export
 as_map_tibble <- function(x, region = ".", exact = FALSE, ...){
   UseMethod("as_map_tibble")

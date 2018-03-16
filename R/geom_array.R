@@ -19,8 +19,8 @@ geom_array <- function(mapping = NULL, data = NULL, stat = "array",
 ##     check.param = FALSE, params = list(nrow = nrow, spread = spread, na.rm = FALSE, ...))
 ## }
 #' @export
-StatArray <- ggproto(
-  "StatArray", Stat,
+StatArray <- ggplot2::ggproto(
+  "StatArray", ggplot2::Stat,
   compute_panel = function(data, scales, nrow = 10, ncol = NULL, spread = c(4,4),
       hjust = 0.5, vjust = 0.5){
 
