@@ -48,12 +48,12 @@ degrees <- function(proj = NULL, long_0 = 0, lat_min = -80, lat_max = 80,
   lat_breaks <- compute_breaks(lat_min, lat_max, lat_by, lat_n)
   long_breaks <- compute_breaks(long_min, long_max, long_by, long_n)
 
-  degrees_lat <- tibble(
+  degrees_lat <- tibble::tibble(
     lat = rep(lat_breaks, length(lat_at)),
     long = rep(lat_at, each=length(lat_breaks)),
     label = lat %>% wrap_dd %>% sp::dd2dms(TRUE) %>% pretty_dms)
 
-  degrees_long <- tibble(
+  degrees_long <- tibble::tibble(
     lat = rep(long_at, each=length(long_breaks)),
     long = rep(long_breaks, length(long_at)),
     label = long %>% wrap_dd %>% sp::dd2dms() %>% pretty_dms)
