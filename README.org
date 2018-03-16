@@ -1,6 +1,6 @@
--------------header image--------------
+[[img/header.png]]
 
-Description & Motivation
+  <Description & Motivation>
 
 ** Inspiration
 
@@ -12,13 +12,14 @@ Description & Motivation
 - https://seethedatablog.wordpress.com/2016/12/31/r-shift-centralprime-meridian-of-world-map/
 - https://gist.github.com/valentinitnelav/c7598fcfc8e53658f66feea9d3bafb40
 
-** Usage
+** Installation
 
 #+BEGIN_SRC R
 library(devtools)
 devtools::install_github("thackl/ggworldmap")
 #+END_SRC
 
+** Usage
 
 #+BEGIN_SRC R
 library(tidyverse)
