@@ -49,7 +49,7 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0,
 
   # get map as SpatialPolygons
   if(is.character(map)){
-    map <- map2sp(maps::map(map, wrap = c(-180, 180) + long_0, fill=fill, plot=plot))
+    map <- as_SpatialPolygons(maps::map(map, wrap = c(-180, 180) + long_0, fill=fill, plot=plot))
   } else if(!is(map, "SpatialPolygons")) {
     stop("unknown map format")
   }
@@ -57,32 +57,14 @@ worldmap <- function(map = "world", proj = NULL, long_0 = 0,
   map <- map %>% crop(long_min, long_max, lat_min, lat_max)
 
   d <- .00001 # nudge crop off by this tiny bit to prevent overlaps between boxes
-  sp2df(map) %>%
+
+  as_map_tibble(map) %>%
     smooth_crop_lines(long_min, long_max, d = d*2) %>%
     project(proj, long_0)
 }
 
-sp_box <- function(long_min, long_max, lat_min = -90, lat_max = 90,
-                     proj = "+proj=longlat +datum=WGS84"){
-  box <- as(raster::extent(long_min, long_max, lat_min, lat_max), "SpatialPolygons")
-  sp::proj4string(box) <- proj
-  box
-}
-
-sp_line <- function(long_0 = NULL, proj = "+proj=longlat +datum=WGS84"){
-  long_0 %||% stop("long_0 required")
-  sp::SpatialLines(list(sp::Lines(list(sp::Line(cbind(180+long_0,c(-90,90)))), ID="line")), proj4string=sp::CRS(proj))
-}
-
-
-map2sp <- function(x, proj = "+proj=longlat +datum=WGS84"){
-  maptools::map2SpatialPolygons(x, IDs=sapply(strsplit(x$names, ":"), "[", 1L),
-                                proj4string=sp::CRS(proj))
-}
-
-sp2df <- function(x){
-  x <- as(x, "SpatialPolygonsDataFrame")
-  suppressWarnings(ggplot2::map_data(x)) %>% as_tibble
+sp_box <- function(long_min, long_max, lat_min = -90, lat_max = 90){
+  as(raster::extent(long_min, long_max, lat_min, lat_max), "SpatialPolygons")
 }
 
 buffer <- function(spgeom, byid = TRUE, ...){
@@ -90,14 +72,14 @@ buffer <- function(spgeom, byid = TRUE, ...){
 }
 
 crop <- function(spgeom, long_min, long_max, lat_min = -90, lat_max = 90,
-    proj = "+proj=longlat +datum=WGS84", buffer_width = 0, byid = TRUE, ...){
+    buffer_width = 0, byid = TRUE, ...){
 
   if(!is.null(buffer_width)){
     spgeom <- buffer(spgeom, width = buffer_width)
   }
 
   rgeos::gIntersection(spgeom, sp_box(long_min = long_min, long_max = long_max,
-      lat_min = lat_min, lat_max = lat_max, proj = proj), byid=TRUE, ...)
+      lat_min = lat_min, lat_max = lat_max), byid=TRUE, ...)
 }
 
 smooth_crop_lines <- function(mr, long_min, long_max, d = 0.00002){
