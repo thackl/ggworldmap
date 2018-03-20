@@ -87,14 +87,21 @@ wrap_dd <- function(r, shift=0){ # between -180 and 180
 pretty_dms <- function (x, ...){
   if (!inherits(x, "DMS"))
     stop("not a DMS object")
+
   if (!x@NS)
     tag <- c("W", "E")
-  else tag <- c("S", "N")
+  else
+    tag <- c("S", "N")
+
   res <- ifelse(x@WS, tag[1], tag[2])
   res <- paste(ifelse(round(x@sec, digits = 3) != "0", paste(round(x@sec,
                              SpatialPolygons2mapdigits = 3), "\"", sep = ""), ""), res, sep = "")
   res <- paste(ifelse(((x@min != 0) | (round(x@sec, digits = 3) !=
         "0")), paste("°", x@min, "'", sep = ""), ""), res, sep = "")
   res <- paste(x@deg, "°", res, sep = "")
+
+  # no tags for 0d
+  res[res %in% c("0°N", "0°E")] <- "0°"
+
   res
 }
